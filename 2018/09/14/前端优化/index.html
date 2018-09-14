@@ -243,7 +243,7 @@
 
     
         <meta property="article:published_time" content="Fri Sep 14 2018 16:35:30 GMT+0800" />
-        <meta property="article:modified_time" content="Fri Sep 14 2018 16:57:49 GMT+0800" />
+        <meta property="article:modified_time" content="Fri Sep 14 2018 17:04:17 GMT+0800" />
     
 
     <!-- The Twitter Card protocol -->
@@ -270,7 +270,7 @@
     "mainEntityOfPage": "http://yoursite.com/2018/09/14/前端优化/index.html",
     "headline": "前端优化",
     "datePublished": "Fri Sep 14 2018 16:35:30 GMT+0800",
-    "dateModified": "Fri Sep 14 2018 16:57:49 GMT+0800",
+    "dateModified": "Fri Sep 14 2018 17:04:17 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "大雾纷纷",
@@ -506,7 +506,6 @@
 <li>将js与css独立成文件<br>  适量地将js与css独立成文件。独立出来会增加http请求数，但是可以减小html大小，还可以利用缓存。内联会增加html大小，但是减少请求。<br>  所以比如首页，可以将js与css内联，因为速度第一。而比较公用的css与js则单独拎出来，放在缓存里，能提高所有用这些文件的页面加载速度。</li>
 <li>预加载<br>  与延后加载不同的是，预加载是在浏览器空闲的时候请求一些可以缓存的内容，这样当用户在这个页面进行了操作之后，能直接用那些缓存的内容。<br>  常用的预加载逻辑有：<br>  无条件的预加载，一旦onload之后就加载。<br>  条件预加载，根据用户行为，猜测需要的文件，从而提前加载。<br>  预期的预加载，比如旧网站需要迁移到新网站了，就在旧网站提供新网站的预加载，这样以后用户切换到新网站，也不会和已有缓存的旧网站有很明显的性能区别。</li>
 </ul>
-<hr>
 <h2 id="请求："><a href="#请求：" class="headerlink" title="请求："></a>请求：</h2><ul>
 <li>使用内容分发网络（CDN）<br>   emm…用户与web服务器的距离会对响应时间产生影响，所以在多个地理位置的服务器上部署会使页面加载加快。<br>   所以可以使用第三方or自己造CDN。</li>
 <li>打包组件<br>   从http1.1开始，接受http请求中包含Accept-Encoding属性，一般使用gzip。server接收到这样的请求，就会将返回结果压缩，而且返回结果里会有Content-Encoding:gzip。一般主要压缩html，但css，js，json等都可以。不过pdf，png最好不要，因为他们已经过压缩，再压缩可能反而增加体积。</li>
@@ -516,9 +515,8 @@
 <li>减小cookie的大小<br>   cookie会附在http请求头中，所以减少大小能提高响应时间。<br>   还可以适当设置过期时间，在适当的域级别设置cookie以免影响其他子域。</li>
 <li>用不带cookie的域存放组件<br>   对于某些请求，比如请求一张静态图片，可能并不需要cookie的附加信息，这时候就不要发cookie了。<br>   为了实现它，我们可以用一个专门的域来存放这种资源。<br>   它还有一个好处，即有些代理可能会拒绝缓存带cookie请求获取的内容。</li>
 <li>将组件打包<br>   将组件打包就像邮件里带有多个附件。一次请求获取多个组件，毕竟一个请求比多个请求快。不过可能有些不支持，比如iphone就不支持。</li>
-<li><em>使用http2</em><br>   同域突破同时请求数目限制。<br>   server push，不等html加载到那里再请求，而可以先发过来。<br>   请求头的简略。只发有改变的参数。</li>
+<li><strong>使用http2</strong><br>   同域突破同时请求数目限制。<br>   server push，不等html加载到那里再请求，而可以先发过来。<br>   请求头的简略。只发有改变的参数。</li>
 </ul>
-<hr>
 <h2 id="代码习惯："><a href="#代码习惯：" class="headerlink" title="代码习惯："></a>代码习惯：</h2><ul>
 <li>把css放在前面<br>   css放在head中，允许了页面逐步加载，用户可以尽快看到内容。放到尾部可能触发页面重绘，可能会被拦截。</li>
 <li>把js放在后面<br>   js放head可能block并行下载，增加了用户等待时间。</li>
@@ -526,11 +524,15 @@
 <li>将次等重要的延后加载<br>   页面最重要的部分先加载，而比如js之类可以在onload之后加载，如果页面离开js还有个大概样子的话，比如animations动画类的js就可以。</li>
 <li>少用css表达式<br>   css表达式极容易触发计算，很容易影响性能。尽量少用or使用一次性表达式。</li>
 <li>css使用link<br>   import会被放到底部执行。而link可以在头部。</li>
-<li>效率地使用iframes<br>   了解iframes，以尽量效率地使用iframes。<br>   适用场景：<ul>
+<li><p>效率地使用iframes<br>   了解iframes，以尽量效率地使用iframes。<br>   适用场景：</p>
+<ul>
 <li>展现第三方内容，如广告</li>
 <li>安全的沙盒</li>
-<li>并行下载script<br>缺点：</li>
-<li>就算空白也会耗费性能</li>
+<li><p>并行下载script</p>
+<p>缺点:</p>
+</li>
+<li><p>就算空白也会耗费性能</p>
+</li>
 <li>block页面的onload</li>
 <li>非语义</li>
 </ul>
@@ -543,7 +545,6 @@
 <li>使用事件委托<br>   可以将类似的时间绑定到父节点上，略去每一个div都绑定上，然后比如根据target来定位到触发div，再执行js。这样能显著提高速度。而且也可以尽早进行操作，添加删除div也跟简单。</li>
 <li>避免css的过滤器<br>   在ie7以下，为了实现渐变，有AlphaImageLoader，但是它在下载图片时会阻止渲染并冻结页面，增加内存消耗，并且应用在每个div而不是图片上，更加浪费性能。可以使用PNG8代替，或者hack，如_filter以免影响更高等级的浏览器。</li>
 </ul>
-<hr>
 <h2 id="压缩："><a href="#压缩：" class="headerlink" title="压缩："></a>压缩：</h2><ul>
 <li>压缩js与css<br>   删除空格与注释以压缩文件，可选混淆文件，可以进一步压缩文件大小。这不只针对独立的js，css文件，内联的也可以这么做，哪怕用了gzip，它依然能提高页面速度。</li>
 <li>精简dom元素数量<br>   数量越多，越复杂，页面需要下载的字节就越大，操作起来也会更慢。所以尽量减少。</li>
@@ -553,7 +554,6 @@
 <li>使favicon.ico小且可缓存<br>   favicon.ico会一直被请求，避免它404。而且因为他的位置，请求他会一直带cookie。在ie中，它还会干扰下载顺序，比如onload之后下载部分组件，ie就会先下载favicon.ico再下载组件。<br>   因此，尽量压缩它，最好在1k以下。<a href="http://www.imagemagick.org/" target="_blank" rel="noopener">工具</a> 可以帮助压缩。<br>   将之比如通过expire缓存到本地。</li>
 <li>使组件保持25k以下大小<br>   因为iphone不会缓存25k以上的文件。注意这里我们说的是未压缩的大小。这里也说明了压缩的重要，gzip未必够用。</li>
 </ul>
-<hr>
 <h3 id="状态码："><a href="#状态码：" class="headerlink" title="状态码："></a>状态码：</h3><p>1XX：请求已被接受，需要继续处理。<br>2XX：请求成功<br>3XX：重定向<br>4XX：客户端错误<br>5XX：服务器错误</p>
 <h3 id="200与304的区别："><a href="#200与304的区别：" class="headerlink" title="200与304的区别："></a>200与304的区别：</h3><ul>
 <li>200（cache)即浏览器使用本地缓存版本，最快，因为不用向web服务器发请求。一般可以用future-dated Expires 或 Cache-Control: max-age headers来告诉浏览器是否使用本地缓存版本。</li>
