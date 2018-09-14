@@ -243,7 +243,7 @@
 
     
         <meta property="article:published_time" content="Fri Sep 14 2018 16:35:30 GMT+0800" />
-        <meta property="article:modified_time" content="Fri Sep 14 2018 16:52:21 GMT+0800" />
+        <meta property="article:modified_time" content="Fri Sep 14 2018 16:57:49 GMT+0800" />
     
 
     <!-- The Twitter Card protocol -->
@@ -270,7 +270,7 @@
     "mainEntityOfPage": "http://yoursite.com/2018/09/14/前端优化/index.html",
     "headline": "前端优化",
     "datePublished": "Fri Sep 14 2018 16:35:30 GMT+0800",
-    "dateModified": "Fri Sep 14 2018 16:52:21 GMT+0800",
+    "dateModified": "Fri Sep 14 2018 16:57:49 GMT+0800",
     "author": {
         "@type": "Person",
         "name": "大雾纷纷",
@@ -500,40 +500,19 @@
 <p>这里有一些雅虎的最佳实践，即↑的详情，在原文基础上我进行一些归纳。<br><a href="https://developer.yahoo.com/performance/rules.html" target="_blank" rel="noopener">原文地址</a></p>
 <hr>
 <h2 id="缓存："><a href="#缓存：" class="headerlink" title="缓存："></a>缓存：</h2><ul>
-<li>减少初始访问的请求数，多使用缓存。<pre><code>尽量减少使用的组件种类，因为页面会花很多时间下载组件们。
- 尽量将文件组合到一个文件里，如js，css。所以现在有webpack之流。
- 使用css雪碧图，将多个图片组合到一个图片内，然后使用background-image和background-position属性以展现所需图片片段。
-</code></pre></li>
-<li>添加Expires或Cache-Control在header<pre><code>这是强制缓存。
-对于静态组件，在header中设置expires一个尽量长的值，以使之接近永不过期。
-对于动态组件，使用Cache-Control。
-不过这些只对于有缓存的情况有优化，初次访问还是没影响。
-</code></pre></li>
-<li>使用ETags<pre><code>ETags和If-Modified-Since类似，但是更精确好用。他们都是协商缓存。brower请求资源时，获得response，其中可以带有ETag和Last-Modified属性，前者代表此文件的唯一标识码，后者代表此文件最后更新时间，只精确到秒。然后如果brower又需要这个文件了，就发一个请求过去，带上上次请求拿到的标识，用If-modified-Since和If-None-Match属性，server拿到请求之后就可以根据这些属性对比，如果发现和目前的文件属性一致，就返回304（使用浏览器缓存文件）。
-ETags的缺点在于，不同服务器下同一文件的ETags是不一样的，所以如果网站是多服务器的，最好还是不要用ETags，用Last-Modified。
-（有一个想法，可否在此基础上更优化点？就如果这个页面用到某js文件。然后更新了js文件中的a方法，但是页面没用到a方法，所以这个页面仍然不更新缓存）
-（这里提一下webpack的hash。项目中任何文件被改动后，hash值就会被重新计算。而且它不是每个文件不同hash，而是所有文件同一个hash，所以也没法做到单独文件修改--&gt;单独文件重新加载。所以可以使用chunkhash，这个是针对每个js文件单独计算的hash。不过通过js文件入口获取的css文件之流，就得用contenthash。）
-ajax也可以使用缓存
-提高ajax速度的最主要办法是使ajax的responses可缓存。前面一些文件的优化方法也适用于response。如gzip压缩内容，减少DNS查询，压缩js，避免重定向，设置ETags。
-如果用了Expires或Cache-Control，那么的确将response缓存了。此时在请求的url上加上时间戳，如&amp;t=11223344。
-</code></pre></li>
-<li>将js与css独立成文件<pre><code>适量地将js与css独立成文件。独立出来会增加http请求数，但是可以减小html大小，还可以利用缓存。内联会增加html大小，但是减少请求。
-所以比如首页，可以将js与css内联，因为速度第一。而比较公用的css与js则单独拎出来，放在缓存里，能提高所有用这些文件的页面加载速度。
-</code></pre></li>
-<li>预加载<pre><code>与延后加载不同的是，预加载是在浏览器空闲的时候请求一些可以缓存的内容，这样当用户在这个页面进行了操作之后，能直接用那些缓存的内容。
-常用的预加载逻辑有：
-无条件的预加载，一旦onload之后就加载。
-条件预加载，根据用户行为，猜测需要的文件，从而提前加载。
-预期的预加载，比如旧网站需要迁移到新网站了，就在旧网站提供新网站的预加载，这样以后用户切换到新网站，也不会和已有缓存的旧网站有很明显的性能区别。
-</code></pre></li>
+<li>减少初始访问的请求数，多使用缓存。<br>  尽量减少使用的组件种类，因为页面会花很多时间下载组件们。<br>  尽量将文件组合到一个文件里，如js，css。所以现在有webpack之流。<br>  使用css雪碧图，将多个图片组合到一个图片内，然后使用background-image和background-position属性以展现所需图片片段。</li>
+<li>添加Expires或Cache-Control在header<br>  这是强制缓存。<br>  对于静态组件，在header中设置expires一个尽量长的值，以使之接近永不过期。<br>  对于动态组件，使用Cache-Control。<br>  不过这些只对于有缓存的情况有优化，初次访问还是没影响。</li>
+<li>使用ETags<br>  ETags和If-Modified-Since类似，但是更精确好用。他们都是协商缓存。brower请求资源时，获得response，其中可以带有ETag和Last-Modified属性，前者代表此文件的唯一标识码，后者代表此文件最后更新时间，只精确到秒。然后如果brower又需要这个文件了，就发一个请求过去，带上上次请求拿到的标识，用If-modified-Since和If-None-Match属性，server拿到请求之后就可以根据这些属性对比，如果发现和目前的文件属性一致，就返回304（使用浏览器缓存文件）。<br>  ETags的缺点在于，不同服务器下同一文件的ETags是不一样的，所以如果网站是多服务器的，最好还是不要用ETags，用Last-Modified。<br>  （有一个想法，可否在此基础上更优化点？就如果这个页面用到某js文件。然后更新了js文件中的a方法，但是页面没用到a方法，所以这个页面仍然不更新缓存）<br>  （这里提一下webpack的hash。项目中任何文件被改动后，hash值就会被重新计算。而且它不是每个文件不同hash，而是所有文件同一个hash，所以也没法做到单独文件修改–&gt;单独文件重新加载。所以可以使用chunkhash，这个是针对每个js文件单独计算的hash。不过通过js文件入口获取的css文件之流，就得用contenthash。）<br>  ajax也可以使用缓存<br>  提高ajax速度的最主要办法是使ajax的responses可缓存。前面一些文件的优化方法也适用于response。如gzip压缩内容，减少DNS查询，压缩js，避免重定向，设置ETags。<br>  如果用了Expires或Cache-Control，那么的确将response缓存了。此时在请求的url上加上时间戳，如&amp;t=11223344。</li>
+<li>将js与css独立成文件<br>  适量地将js与css独立成文件。独立出来会增加http请求数，但是可以减小html大小，还可以利用缓存。内联会增加html大小，但是减少请求。<br>  所以比如首页，可以将js与css内联，因为速度第一。而比较公用的css与js则单独拎出来，放在缓存里，能提高所有用这些文件的页面加载速度。</li>
+<li>预加载<br>  与延后加载不同的是，预加载是在浏览器空闲的时候请求一些可以缓存的内容，这样当用户在这个页面进行了操作之后，能直接用那些缓存的内容。<br>  常用的预加载逻辑有：<br>  无条件的预加载，一旦onload之后就加载。<br>  条件预加载，根据用户行为，猜测需要的文件，从而提前加载。<br>  预期的预加载，比如旧网站需要迁移到新网站了，就在旧网站提供新网站的预加载，这样以后用户切换到新网站，也不会和已有缓存的旧网站有很明显的性能区别。</li>
 </ul>
 <hr>
 <h2 id="请求："><a href="#请求：" class="headerlink" title="请求："></a>请求：</h2><ul>
 <li>使用内容分发网络（CDN）<br>   emm…用户与web服务器的距离会对响应时间产生影响，所以在多个地理位置的服务器上部署会使页面加载加快。<br>   所以可以使用第三方or自己造CDN。</li>
 <li>打包组件<br>   从http1.1开始，接受http请求中包含Accept-Encoding属性，一般使用gzip。server接收到这样的请求，就会将返回结果压缩，而且返回结果里会有Content-Encoding:gzip。一般主要压缩html，但css，js，json等都可以。不过pdf，png最好不要，因为他们已经过压缩，再压缩可能反而增加体积。</li>
-<li>减少DNS查找<br>   dns即<a href="http://www.bing.com--&gt;202.89.233.100，根据网址查询出ip地址。（记得host文件嘛，翻墙改本机host文件就是这个道理）" target="_blank" rel="noopener">www.bing.com--&gt;202.89.233.100，根据网址查询出ip地址。（记得host文件嘛，翻墙改本机host文件就是这个道理）</a><br>   DNS可以缓存，如用户的ISP或局域网维护的特殊缓存服务器上进行缓存，但也可以放在用户计算机上。当客户端的DNS缓存为空（对于浏览器和操作系统）时，DNS查找的数量等于网页中唯一主机名的数量，包括各类url，js，css，flash对应的主机名。因此可以适量减少唯一主机名。</li>
+<li>减少DNS查找<br>   dns即<a href="">www.bing.com</a>–&gt;202.89.233.100，根据网址查询出ip地址。（记得host文件嘛，翻墙改本机host文件就是这个道理）<br>   DNS可以缓存，如用户的ISP或局域网维护的特殊缓存服务器上进行缓存，但也可以放在用户计算机上。当客户端的DNS缓存为空（对于浏览器和操作系统）时，DNS查找的数量等于网页中唯一主机名的数量，包括各类url，js，css，flash对应的主机名。因此可以适量减少唯一主机名。</li>
 <li>尽量使用get请求<br>   post会先发送请求头，再发送内容，而get只要一个。不过ie中url最长不超过2k，所以发送数据很长的话，膜还是不要用get了。<br>   不过有趣的是，post不带数据的话，表现得就像get一样。当然，根据http规范，get用于检索信息，post用于发送信息。所以从这方面来，检索的时候还是用get吧。<br>   不过这只是从速度上考虑。如果是其它角度，比如危险的请求，不希望能被从url输入之类，不能重复使用的操作之类，当然还是用post啦~</li>
-<li>跨域拆分<br>   拆分使得可以最大化并行下载。不过最好域名控制在2-4个，比如把html和动态内容放在<a href="http://www.a.com，把组件拆开放在www.b.com和www.c.com。" target="_blank" rel="noopener">www.a.com，把组件拆开放在www.b.com和www.c.com。</a></li>
+<li>跨域拆分<br>   拆分使得可以最大化并行下载。不过最好域名控制在2-4个，比如把html和动态内容放在<a href="">www.a.com</a>，把组件拆开放在<a href="">www.b.com</a>和<a href="">www.c.com</a>。</li>
 <li>减小cookie的大小<br>   cookie会附在http请求头中，所以减少大小能提高响应时间。<br>   还可以适当设置过期时间，在适当的域级别设置cookie以免影响其他子域。</li>
 <li>用不带cookie的域存放组件<br>   对于某些请求，比如请求一张静态图片，可能并不需要cookie的附加信息，这时候就不要发cookie了。<br>   为了实现它，我们可以用一个专门的域来存放这种资源。<br>   它还有一个好处，即有些代理可能会拒绝缓存带cookie请求获取的内容。</li>
 <li>将组件打包<br>   将组件打包就像邮件里带有多个附件。一次请求获取多个组件，毕竟一个请求比多个请求快。不过可能有些不支持，比如iphone就不支持。</li>
